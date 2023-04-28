@@ -2,7 +2,7 @@ import pygame
 import math
 from queue import PriorityQueue
 
-WIDTH = 700
+WIDTH = 750
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("A* Pathfinding Implimentation")
 
@@ -27,6 +27,9 @@ class Node:
         self.neighbors = []
         self.width = width
         self.total_rows = total_rows
+
+    def get_color(self):
+        return self.color    
 
     def get_pos(self):
         return self.row, self.col
@@ -184,10 +187,8 @@ def get_clicked_position(pos, rows, width):
 def main(win, width):
     ROWS = 50
     grid = make_grid(ROWS, width)
-
     start = None
     end = None
-
     run = True
 
     while run:
@@ -202,15 +203,15 @@ def main(win, width):
                 
                 try:
                     node = grid[row][col]
-                    if not start and node != end:
+                    if not start and node != end and row != 0 and col != 0 and row != ROWS - 1 and col != ROWS - 1:
                         start = node
                         start.make_start()
 
-                    elif not end and node != start:
+                    elif not end and node != start and row != 0 and col != 0 and row != ROWS - 1 and col != ROWS - 1:
                         end = node
                         end.make_end()
 
-                    elif node != end and node != start:  
+                    elif node != end and node != start and row != 0 and col != 0 and row != ROWS - 1 and col != ROWS - 1:  
                         node.make_barrier()
                 except IndexError:
                     pass 
@@ -230,6 +231,8 @@ def main(win, width):
                     for row in grid:
                         for node in row:
                             node.update_neighbors(grid)
+                            if node.get_color() == RED or node.get_color() == PURPLE or node.get_color() == GREEN:
+                                node.reset()
                     
                     algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)       
 
