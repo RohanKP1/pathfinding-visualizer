@@ -18,7 +18,13 @@ Users of this project can interact with it to observe how these algorithms work 
 
 Overall, the "pathfinding-visualizer" project is a valuable tool for educational purposes and practical applications, allowing users to gain insights into the behavior and efficiency of different pathfinding algorithms by visually observing their operation within a grid or maze environment.
 
-<a href="https://postimages.org/" target="_blank"><img src="https://i.postimg.cc/mZ1hdV8v/Screenshot-2023-09-10-174155.png" alt="Screenshot-2023-09-10-174155"/></a> <a href="https://postimg.cc/kRn9HCNz" target="_blank"><img src="https://i.postimg.cc/D0GZ8ySv/Screenshot-2023-09-10-174615.png" alt="Screenshot-2023-09-10-174615"/></a> 
+# Coming Sooooooonn......
+- **`Maze Generator`**
+<br><br>
+
+<center><a href="https://postimages.org/" target="_blank"><img src="https://i.postimg.cc/mZ1hdV8v/Screenshot-2023-09-10-174155.png" alt="Screenshot-2023-09-10-174155" /></a> 
+<a href="https://postimg.cc/kRn9HCNz" target="_blank"><img src="https://i.postimg.cc/D0GZ8ySv/Screenshot-2023-09-10-174615.png" alt="Screenshot-2023-09-10-174615" /></a>
+</center> 
 
 
 ### Commands:
