@@ -1,21 +1,22 @@
 import pygame
 from queue import PriorityQueue
 from tkinter import messagebox, Tk
+import time
 
-def main_program(algorithm : int = 0):
+def main_program(pfAlgorithm : int = 0, mazeAlgorithm : int = 0):
 
     WIDTH = 800
     WIN = pygame.display.set_mode((WIDTH, WIDTH))
     pygame.display.set_caption("Pathfinding Algorithm Visualizer")
 
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
-    YELLOW = (255, 255, 0)
+    RED = (255, 0, 128)
+    GREEN = (39, 255, 0)
+    BLUE = (0, 255, 255)
+    YELLOW = (255, 240, 0)
     WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    PURPLE = (128, 0, 128)
-    ORANGE = (255, 165, 0)
+    BLACK = (0, 29, 49)
+    PURPLE = (229, 0, 230)
+    ORANGE = (255, 105, 0)
     GREY = (128, 128, 128)
     TURQUISE = (65, 224, 208)
 
@@ -99,7 +100,7 @@ def main_program(algorithm : int = 0):
     def h_fun(p1, p2):
         x1, y1 = p1
         x2, y2 = p2
-        return abs(x1 - x2) + abs(y1 - y2)
+        return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
 
     def reconstruct_path(came_from, current, draw):
         while current in came_from:
@@ -154,60 +155,48 @@ def main_program(algorithm : int = 0):
 
     def dijkstra_algorithm(draw, start, end):
         queue = []
-        path = []
-        start.visited = True
-        end.visited = False
-        end.queued = False
-        end.prior = None
         queue.append(start)
-        stop = True
-        while stop:
-            if len(queue) > 0:
-                current_node = queue.pop(0)
-                current_node.visited = True
-                current_node.make_closed()
-                start.make_start()
-                if current_node == end:
-                    end.make_end()
-                    while current_node.prior != start:
-                        path.append(current_node.prior)
-                        current_node = current_node.prior
-                    stop = False
-                else:
-                    for neighbor in current_node.neighbors:
-                        if not neighbor.queued and not neighbor.is_barrier():
-                            neighbor.queued = True
-                            neighbor.make_open()
-                            neighbor.prior = current_node
-                            queue.append(neighbor)
-                draw()              
-                for i in path:
-                    i.make_path()
-            else:
-                stop = False
-                return False
+        start.queued = True
+        start.distance = 0
+        while queue:
+            current_node = queue.pop(0)
+            current_node.visited = True
+            current_node.make_closed()
+            start.make_start()
+            if current_node == end:
+                end.make_end()
+                while current_node.prior != start:
+                    current_node.make_path()
+                    current_node = current_node.prior
+                return True
+            for neighbor in current_node.neighbors:
+                if not neighbor.visited and not neighbor.is_barrier():
+                    neighbor.prior = current_node
+                    neighbor.distance = current_node.distance + 1
+                    neighbor.queued = True
+                    queue.append(neighbor)
+            draw()
+        return False
 
     def dfs_algorithm(draw, start, end):
-        visited = []
-        path = set()
-        visited.append(start)
-        while visited:
-            node = visited.pop(-1)
-            path.add(node)
-            node.make_closed()
-            start.make_start()
-            end.make_end()
-            for neighbor in node.neighbors:
-                if neighbor == end:
-                    end.make_end()
-                    for node in path:
-                        if not node.is_start() and not node.is_end():
-                                node.make_path()
-                    visited.clear()
-                    return True                      
-                elif neighbor not in visited and not neighbor.is_barrier() and not neighbor.is_closed():
-                    visited.append(neighbor)
-                    neighbor.make_open()    
+        stack = [start]
+        visited = set()
+        while stack:
+            node = stack.pop()
+            if node == end:
+                end.make_end()
+                while node != start:
+                    node.make_path()
+                    node = node.prior
+                return True
+            if node not in visited:
+                visited.add(node)
+                for neighbor in node.neighbors:
+                    if neighbor not in visited and not neighbor.is_barrier():
+                        neighbor.prior = node
+                        stack.append(neighbor)
+                node.make_closed()
+                start.make_start()
             draw()
         return False    
 
@@ -248,18 +237,59 @@ def main_program(algorithm : int = 0):
         col = x // gap
         return row, col
 
-    def main(win, width, algorithm = 0):
+    def main(win, width, pfAlgorithm = 0, mazeAlgorithm = 0):
         ROWS = 50
         grid = make_grid(ROWS, width)
         start = None
         end = None
         run = True
 
-        while run:
-            draw(win, grid, ROWS, width)
+        if mazeAlgorithm == 1:
+            from mazes import maze_dfs
+            maze = maze_dfs.maze
+            i,j = -1, -1
+            for row in maze:
+                i+=1
+                for tile in row:
+                    j+=1
+                    if tile == 'X':
+                        node = grid[i][j]
+                        node.make_barrier()
+                j = -1 
+        elif mazeAlgorithm == 2:
+            from mazes import maze_kruskal
+            maze = maze_kruskal.maze
+            i,j = -1, -1
+            for row in maze:
+                i+=1
+                for tile in row:
+                    j+=1
+                    if tile == 'X':
+                        node = grid[i][j]
+                        node.make_barrier()
+                j = -1 
+        elif mazeAlgorithm == 3:
+            from mazes import maze_wilson
+            maze = maze_wilson.maze
+            i,j = -1, -1
+            for row in maze:
+                i+=1
+                for tile in row:
+                    j+=1
+                    if tile == 'X':
+                        node = grid[i][j]
+                        node.make_barrier()
+                j = -1 
+        else: 
+            maze = [['' for _ in range(50)] for _ in range(50)]
+
+        while run:     
             for event in pygame.event.get():
+                
+                draw(win, grid, ROWS, width)
+
                 if event.type == pygame.QUIT:
-                    run = False
+                    run = False     
 
                 if pygame.mouse.get_pressed()[0]:
                     pos = pygame.mouse.get_pos()
@@ -279,6 +309,8 @@ def main_program(algorithm : int = 0):
                             node.make_barrier()
                     except IndexError:
                         pass 
+
+                    
 
                 elif pygame.mouse.get_pressed()[2]:   
                     pos = pygame.mouse.get_pos()
@@ -303,26 +335,37 @@ def main_program(algorithm : int = 0):
                                     node.visited = False
                                     node.queued = False
                                     node.prior = None
-
-                        if algorithm == 0:
+                        start_timer = time.time()
+                        if pfAlgorithm == 0:
                             check = dfs_algorithm(lambda: draw(win, grid, ROWS, width), start, end)
-                        elif algorithm == 1:
+                        elif pfAlgorithm == 1:
                             check = dijkstra_algorithm(lambda: draw(win, grid, ROWS, width), start, end)
-                        elif algorithm == 2:  
+                        elif pfAlgorithm == 2:  
                             check = astar_algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)             
                         else:
-                            Tk().wm_withdraw()
-                            messagebox.showinfo("Invalid Input","Enter correct algorithm number!")
+                            pass
 
                         if check == False:
-                            Tk().wm_withdraw()
                             messagebox.showinfo("No Solution", "There is no solution!")
+                        else:    
+                            end_timer = time.time() 
+                            print("The time of execution of above program is :",(end_timer-start_timer) * 10**3, "ms")   
+                            messagebox.showinfo("Solution Found", f"Execution time: { (end_timer-start_timer) * 10**3 } ms")
 
                     if event.key == pygame.K_r:
                         start = None
                         end = None
-                        grid = make_grid(ROWS, width)        
+                        grid = make_grid(ROWS, width)  
+                        i,j = -1, -1
+                        for row in maze:
+                            i+=1
+                            for tile in row:
+                                j+=1
+                                if tile == 'X':
+                                    node = grid[i][j]
+                                    node.make_barrier()
+                            j = -1          
 
         pygame.quit()                                    
 
-    main(WIN, WIDTH, algorithm)    
+    main(WIN, WIDTH, pfAlgorithm, mazeAlgorithm)    

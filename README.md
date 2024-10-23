@@ -1,7 +1,10 @@
 # Pathfinding Algorithms Visualizer
+
 The "pathfinding-visualizer" project is a Python-based application that utilizes the Pygame library and custom tkinter components. Its primary purpose is to provide a visual representation of three different pathfinding algorithms: A-star, Dijkstra, and Depth-First Search (DFS).
 
 Users of this project can interact with it to observe how these algorithms work in finding the optimal paths within a specified grid or maze. Here are some key features and components of the project:
+
+### Features:
 
 1. **Python-Based:** The project is written in Python, making it accessible to a wide range of users who are familiar with the language.
 
@@ -18,11 +21,17 @@ Users of this project can interact with it to observe how these algorithms work 
 
 Overall, the "pathfinding-visualizer" project is a valuable tool for educational purposes and practical applications, allowing users to gain insights into the behavior and efficiency of different pathfinding algorithms by visually observing their operation within a grid or maze environment.
 
-<a href="https://postimages.org/" target="_blank"><img src="https://i.postimg.cc/mZ1hdV8v/Screenshot-2023-09-10-174155.png" alt="Screenshot-2023-09-10-174155"/></a> <a href="https://postimg.cc/kRn9HCNz" target="_blank"><img src="https://i.postimg.cc/D0GZ8ySv/Screenshot-2023-09-10-174615.png" alt="Screenshot-2023-09-10-174615"/></a> 
+### Screenshots:
+
+<img src="assets/runner.png" width="400"/>
+
+<img src="assets/working.png" width="800"/>
 
 
 ### Commands:
-- `SPACE` - Starts the algorithm
-- `R` - Resets the screen
-- `LEFT MOUSE BUTTON` - Draw the node
-- `RIGHT MOUSE BUTTON` - Erase the node
+
+*   `SPACE` - Starts the algorithm
+*   `R` - Resets the screen
+*   `LEFT MOUSE BUTTON` - Draw the node
+*   `RIGHT MOUSE BUTTON` - Erase the node
+
