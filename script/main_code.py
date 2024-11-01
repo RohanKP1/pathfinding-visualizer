@@ -155,38 +155,28 @@ def main_program(pfAlgorithm : int = 0, mazeAlgorithm : int = 0):
 
     def dijkstra_algorithm(draw, start, end):
         queue = []
-        path = []
-        start.visited = True
-        end.visited = False
-        end.queued = False
-        end.prior = None
         queue.append(start)
-        stop = True
-        while stop:
-            if len(queue) > 0:
-                current_node = queue.pop(0)
-                current_node.visited = True
-                current_node.make_closed()
-                start.make_start()
-                if current_node == end:
-                    end.make_end()
-                    while current_node.prior != start:
-                        path.append(current_node.prior)
-                        current_node = current_node.prior
-                    stop = False
-                else:
-                    for neighbor in current_node.neighbors:
-                        if not neighbor.queued and not neighbor.is_barrier():
-                            neighbor.queued = True
-                            neighbor.make_open()
-                            neighbor.prior = current_node
-                            queue.append(neighbor)
-                draw()              
-                for i in path:
-                    i.make_path()
-            else:
-                stop = False
-                return False
+        start.queued = True
+        start.distance = 0
+        while queue:
+            current_node = queue.pop(0)
+            current_node.visited = True
+            current_node.make_closed()
+            start.make_start()
+            if current_node == end:
+                end.make_end()
+                while current_node.prior != start:
+                    current_node.make_path()
+                    current_node = current_node.prior
+                return True
+            for neighbor in current_node.neighbors:
+                if not neighbor.visited and not neighbor.is_barrier():
+                    neighbor.prior = current_node
+                    neighbor.distance = current_node.distance + 1
+                    neighbor.queued = True
+                    queue.append(neighbor)
+            draw()
+        return False
 
     def dfs_algorithm(draw, start, end):
         stack = [start]
